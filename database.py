@@ -17,9 +17,17 @@ def get_connection():
 
 
 def init_db():
-    """Create the applications table if it doesn't already exist."""
+    """Create the applications and users tables if they don't already exist."""
     conn = get_connection()
     cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT PRIMARY KEY,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS applications (
@@ -35,7 +43,7 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("Database initialized: tracker.db (table 'applications' ready)")
+    print("Database initialized: tracker.db (tables 'users' and 'applications' ready)")
 
 
 if __name__ == "__main__":
